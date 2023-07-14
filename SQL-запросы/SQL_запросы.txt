@@ -1,0 +1,48 @@
+Работа с базой данных
+
+1)  SELECT COUNT(id) 
+    FROM user_model;
+
+2)  INSERT INTO product_model (name, price, weight, units, "categoryId") 
+    VALUES ('meat', 499, 500, 'g', 13), ('apple', 145, 300, 'g', 11), ('Bombbar juce', 279, 250, 'g', 9);
+
+3)  SELECT "categoryId", 
+    COUNT(id) AS "productCount" 
+    FROM product_model 
+    GROUP BY "categoryId" 
+    HAVING COUNT(id) > 5 
+    ORDER BY COUNT(id);
+
+4)  SELECT id,
+       CASE
+       	WHEN "deliveryPrice" > 500 AND status < 2 THEN 'yes'
+       	ELSE 'no'
+       END AS update_order
+    FROM order_model;
+
+5)  SELECT p.name, p.price, c.name AS "categoryName" 
+    FROM product_model AS p
+    INNER JOIN category_model AS c ON p."categoryId" = c.id
+    WHERE p.price BETWEEN 200 AND 500;
+
+6)  SELECT c.name, SUM(k."productsCount")
+    FROM kit_model AS k
+    LEFT JOIN card_model AS c ON k."cardId" = c.id
+    GROUP BY c.name
+    ORDER BY c.name;
+
+7)  SELECT c.login, COUNT(o."inDelivery")
+    FROM "Orders" AS o
+    INNER JOIN "Couriers" AS c ON o."courierId" = c.id
+    WHERE o."inDelivery" = true
+    GROUP BY c.login;
+
+8)  SELECT track,
+        CASE
+           WHEN finished = true THEN 2
+           WHEN cancelled = true THEN -1
+           WHEN "inDelivery" = true THEN 1
+	    ELSE 0
+        END AS status
+    FROM "Orders";
+
